@@ -11,8 +11,9 @@ type SafeUser = Omit<User, "passwordHash">; //omit the passwordHash field
 //signupInput is coming from Zod and as we have async function then it will return a promise and its structure will be safeUser
 
 export async function signupService(input: SignupInput): Promise<SafeUser> {
+    console.log("signup start", input);
 
-    //if no user found it will return a empty array
+    //if no user found it will return an empty array
     const isPresent = await db.select().from(userTable).where(eq( userTable.email, input.email )).limit(1)
 
     if(isPresent.length > 0) {

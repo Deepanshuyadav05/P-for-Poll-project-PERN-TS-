@@ -1,4 +1,6 @@
 import {z} from 'zod'
+// what a valid signup payload looks like (name length, email format, password length, no extra keys). It also exports the inferred SignupInput type, which auth.services.ts uses as its
+//     parameter type.
 
 // Reusable pieces
 const emailSchema = z
