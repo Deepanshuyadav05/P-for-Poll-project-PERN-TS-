@@ -1,18 +1,18 @@
-import type {NextFunction, Request, Response} from "express";
-import {z} from "zod";
+// src/middleware/validate.ts
 
-type RequestSource = "body" | "query" | "params";
+import type { RequestHandler } from "express";
+import type { ZodType } from "zod";
 
-const validate = (schema: z.ZodType, source: RequestSource = "body") =>
-    (req: Request, res: Response, next: NextFunction) => {
-        const result = schema.safeParse(req[source]);
+export const validateBody =
+    (schema: ZodType): RequestHandler =>
+        (req, _res, next) => {
+            const result = schema.safeParse(req.body);
 
-        if (!result.success) {
-            return res.status(400).send({error: z.treeifyError(result.error)});
-        }
+            if (!result.success) {
+                return next(result.error);
+            }
 
-        req[source] = result.data;
-        next();
-    };
+            req.body = result.data;
 
-export {validate};
+            next();
+        };
