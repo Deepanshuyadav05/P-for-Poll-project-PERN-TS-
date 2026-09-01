@@ -28,4 +28,13 @@ const signupSchema = z
 
 type SignupInput = z.infer<typeof signupSchema>;
 
-export { signupSchema, type SignupInput };
+const loginSchema = z
+    .object({
+        email: emailSchema,
+        password: passwordSchema
+    })
+.strict()
+
+type LoginInput = z.infer<typeof loginSchema>;
+
+export { signupSchema, type SignupInput, loginSchema ,type LoginInput };
