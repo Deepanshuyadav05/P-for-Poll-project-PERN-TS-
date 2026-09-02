@@ -5,7 +5,6 @@ import db from "../../db/index.js";
 import {eq} from "drizzle-orm";
 import {ApiError} from "../../utils/api-error.js";
 import {generateAccessToken} from "../../utils/jwt.js";
-import crypto from "crypto";
 
 
 type User = typeof userTable.$inferSelect;  //extract table design provided by drizzle
@@ -62,13 +61,11 @@ export async function loginService(input: LoginInput): Promise<{ user: SafeUser;
 
     const AccessToken = generateAccessToken({ sub: user.id })
 
-    const hashedToken = crypto.createHash('sha256').update(AccessToken).digest('hex');
-
     const {passwordHash : _ , ...safeUser} = user;
 
 
 
-    return { user: safeUser, token:hashedToken }
+    return { user: safeUser, token:AccessToken }
 
 
     }

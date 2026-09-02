@@ -3,8 +3,8 @@ import type {Request, Response} from "express";
 import {ApiResponse} from "../../utils/api-response.js";
 import type {CookieOptions} from "express";
 
-//shared cookie options for the refreshToken cookie, used by both login and refresh
-const refreshCookieOptions : CookieOptions = {
+//shared cookie options for the accessToken cookie, used by both login and access
+const accessCookieOptions : CookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV !== "development",
         sameSite: "strict",
@@ -21,7 +21,7 @@ const signupController = async (req: Request, res: Response) => {
 const loginController = async (req: Request, res: Response) => {
 
         const {user, token} = await auth_service.loginService(req.body);
-        res.cookie("refreshToken", token, refreshCookieOptions);
+        res.cookie("accessToken", token, accessCookieOptions);
         return ApiResponse.created(res, "User logged in successfully", user);
 
 }
