@@ -1,9 +1,11 @@
-import {signupSchema, type SignupInput} from "./auth.validations.zod.js";
+import type { SignupInput, LoginInput} from "./auth.validations.zod.js";
 import {userTable} from "../../db/schema.js";
 import bcrypt from "bcrypt";
 import db from "../../db/index.js";
 import {eq} from "drizzle-orm";
 import {ApiError} from "../../utils/api-error.js";
+import {generateAccessToken} from "../../utils/jwt.js";
+import crypto from "crypto";
 
 
 type User = typeof userTable.$inferSelect;  //extract table design provided by drizzle
@@ -39,3 +41,34 @@ export async function signupService(input: SignupInput): Promise<SafeUser> {
     return safeUser;
 
 }
+
+export async function loginService(input: LoginInput): Promise<{ user: SafeUser; token: string} >  {
+    if(process.env.NODE_ENV === "development") {
+        console.log(input)
+    }
+    const isPresent = await db.select().from(userTable).where(eq( userTable.email, input.email )).limit(1);
+    if(isPresent.length == 0) {
+        throw ApiError.internal("Invalid credentials");
+    }
+
+    const [user] = isPresent
+    // user is User | undefine
+    if (!user) throw ApiError.unauthorized("Invalid credentials 1");
+
+    const isPasswordValid = await bcrypt.compare(input.password, user.passwordHash);
+    if(!isPasswordValid) {
+        throw ApiError.unauthorized("Invalid credentials 2");
+    }
+
+    const AccessToken = generateAccessToken({ sub: user.id })
+
+    const hashedToken = crypto.createHash('sha256').update(AccessToken).digest('hex');
+
+    const {passwordHash : _ , ...safeUser} = user;
+
+
+
+    return { user: safeUser, token:hashedToken }
+
+
+    }

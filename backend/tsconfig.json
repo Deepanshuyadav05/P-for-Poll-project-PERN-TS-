@@ -22,7 +22,9 @@
     "declarationMap": true,
 
     // Stricter Typechecking Options
+    //Add `undefined` to a type when accessed using an index like array
     "noUncheckedIndexedAccess": true,
+    // Normally, TypeScript treats "property is optional" and "property's value can be undefined" as basically the same thing. exactOptionalPropertyTypes: true splits them apart
     "exactOptionalPropertyTypes": true,
 
     // Style Options
