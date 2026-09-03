@@ -41,6 +41,7 @@ export async function signupService(input: SignupInput): Promise<SafeUser> {
 
 }
 
+//Login service
 export async function loginService(input: LoginInput): Promise<{ user: SafeUser; token: string} >  {
     if(process.env.NODE_ENV === "development") {
         console.log(input)
@@ -50,6 +51,8 @@ export async function loginService(input: LoginInput): Promise<{ user: SafeUser;
         throw ApiError.internal("Invalid credentials");
     }
 
+    // array destructuring, not a copy of the array. The [ ] on the left isn't creating an array — it's a pattern that says "take the array on the right, and pull out element at index 0, and bind it to a
+    //   variable named user.
     const [user] = isPresent
     // user is User | undefine
     if (!user) throw ApiError.unauthorized("Invalid credentials 1");
@@ -68,4 +71,22 @@ export async function loginService(input: LoginInput): Promise<{ user: SafeUser;
     return { user: safeUser, token:AccessToken }
 
 
-    }
+}
+
+//Get me service
+export async function getMe(input:any): Promise<{ user: SafeUser }> {
+    //isPresent is array of object
+    // isPresent = [
+    //     { id: "abc", name: "Deep", email: "...", passwordHash: "...", createdAt: ..., updatedAt: ... }
+    //   ]
+    const isPresent = await db.select().from(userTable).where(eq( userTable.id, input.userId)).limit(1)
+
+    //now user is single object of the element at index 0 of isPresent
+    const [user] = isPresent
+
+    if (!user) throw  ApiError.notFound("User not found");
+
+    const {passwordHash : _ , ...safeUser} = user;
+
+    return {user:safeUser}
+}

@@ -10,7 +10,7 @@ const accessCookieOptions : CookieOptions = {
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
 }
-
+//Signup controller
 const signupController = async (req: Request, res: Response) => {
 
         const result = await auth_service.signupService(req.body);
@@ -18,6 +18,7 @@ const signupController = async (req: Request, res: Response) => {
 
 }
 
+//Login controller
 const loginController = async (req: Request, res: Response) => {
 
         const {user, token} = await auth_service.loginService(req.body);
@@ -26,4 +27,11 @@ const loginController = async (req: Request, res: Response) => {
 
 }
 
-export {signupController, loginController};
+//Get-me controller
+const getMeController = async (req: Request, res: Response) => {
+
+        const user = await auth_service.getMe({ userId: req.userId });
+        return ApiResponse.ok(res, "User fetched successfully", user)
+}
+
+export {signupController, loginController, getMeController};
