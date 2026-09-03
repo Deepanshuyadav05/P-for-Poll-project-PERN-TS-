@@ -30,8 +30,15 @@ const loginController = async (req: Request, res: Response) => {
 //Get-me controller
 const getMeController = async (req: Request, res: Response) => {
 
-        const user = await auth_service.getMe({ userId: req.userId });
+        const user = await auth_service.getMe(req.userId);
         return ApiResponse.ok(res, "User fetched successfully", user)
 }
 
-export {signupController, loginController, getMeController};
+//Logout Controller
+const logoutController = async (req: Request, res: Response) => {
+        //clearCookie needs matching httpOnly/sameSite/secure options to actually clear the right cookie — maxAge is ignored, so reusing accessCookieOptions as-is is fine
+        res.clearCookie("accessToken", accessCookieOptions);
+        return ApiResponse.ok(res, "user logged out successfully", null);
+}
+
+export {signupController, loginController, getMeController, logoutController};

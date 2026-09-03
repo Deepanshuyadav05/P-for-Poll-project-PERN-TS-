@@ -48,7 +48,7 @@ export async function loginService(input: LoginInput): Promise<{ user: SafeUser;
     }
     const isPresent = await db.select().from(userTable).where(eq( userTable.email, input.email )).limit(1);
     if(isPresent.length == 0) {
-        throw ApiError.internal("Invalid credentials");
+        throw ApiError.unauthorized("Invalid credentials");
     }
 
     // array destructuring, not a copy of the array. The [ ] on the left isn't creating an array — it's a pattern that says "take the array on the right, and pull out element at index 0, and bind it to a
@@ -74,12 +74,12 @@ export async function loginService(input: LoginInput): Promise<{ user: SafeUser;
 }
 
 //Get me service
-export async function getMe(input:any): Promise<{ user: SafeUser }> {
+export async function getMe(userId:string): Promise<{ user: SafeUser }> {
     //isPresent is array of object
     // isPresent = [
     //     { id: "abc", name: "Deep", email: "...", passwordHash: "...", createdAt: ..., updatedAt: ... }
     //   ]
-    const isPresent = await db.select().from(userTable).where(eq( userTable.id, input.userId)).limit(1)
+    const isPresent = await db.select().from(userTable).where(eq( userTable.id, userId)).limit(1)
 
     //now user is single object of the element at index 0 of isPresent
     const [user] = isPresent
