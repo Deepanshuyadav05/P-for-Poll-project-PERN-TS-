@@ -24,7 +24,7 @@ export const pollTable = pgTable("polls", {
 
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   // Removed .defaultNow() so it requires a future date
-  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
 });
 
 
@@ -54,17 +54,18 @@ export const optionTable = pgTable("options", {
 export const responseTable = pgTable("responses", {
   id: uuid().primaryKey().defaultRandom(),
   pollId: uuid("poll_id").notNull().references(() => pollTable.id, { onDelete: "cascade" }),
-  userId: uuid("user_id").notNull().references(() => userTable.id, { onDelete: "cascade" }),
+  userId: uuid("user_id").references(() => userTable.id, { onDelete: "cascade" }),
+  voterId: varchar("voter_id", { length: 36 }).notNull(),
   submittedAt: timestamp("submitted_at", { withTimezone: true }).defaultNow().notNull(),
 
 }, (table) => {
   return {
-    uniqueResponse: unique("unique_response").on(table.pollId, table.userId)
+    uniqueResponse: unique("unique_response").on(table.pollId, table.voterId)
   }
 });
 // What it does: This second argument to pgTable is used to define table-level constraints or indexes.
-// SQL context: CONSTRAINT unique_response UNIQUE (poll_id, user_id). 
-// By placing a composite unique constraint on both pollId and userId, 
+// SQL context: CONSTRAINT unique_response UNIQUE (poll_id, voterId).
+// By placing a composite unique constraint on both pollId and voterId,
 // the database guarantees that a specific user can only submit one response to a specific poll.
 
 
