@@ -1,6 +1,6 @@
 import { randomUUID } from "crypto";
 
-function makeSlug(title: string): string {
+export function makeSlug(title: string): string {
     const base = title
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, "")   // strip anything not alphanumeric/space/hyphen

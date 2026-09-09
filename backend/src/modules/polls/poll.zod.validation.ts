@@ -36,4 +36,4 @@ export const createPollSchema = z.object({
         ),
 }).strict()
 
-export type CreatePollInput = z.infer<typeof createPollSchema>;
+export type createPollInput = z.infer<typeof createPollSchema>;
