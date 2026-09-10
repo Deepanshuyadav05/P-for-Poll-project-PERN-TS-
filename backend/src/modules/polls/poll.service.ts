@@ -68,6 +68,8 @@ export async function getPollBySlug(slug:string){
     //no destructuring here, you want the whole array, ordered so options display in the order they were created.
     const options = await db.select().from(optionTable).where(eq(optionTable.questionId, question.id)).orderBy(optionTable.displayOrder)
 
-    return {poll, question, options};
+    const {userId, ...publicPoll} = poll
+
+    return {publicPoll, question, options};
 
 }

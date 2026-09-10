@@ -14,7 +14,7 @@ export async function createPoll(req: Request, res: Response) {
 export async function getPoll(req: Request, res: Response) {
 
     //as string tells TypeScript "treat this as a string, full stop" — overriding the wider union — versus ! which just removes nullishness from whatever the type already is.
-    const {poll, question, options} = await pollService.getPollBySlug(req.params.slug as string);
+    const {publicPoll, question, options} = await pollService.getPollBySlug(req.params.slug as string);
 
-    return ApiResponse.ok(res, "Fetched poll successfully", {poll, question, options});
+    return ApiResponse.ok(res, "Fetched poll successfully", {publicPoll, question, options});
 }
