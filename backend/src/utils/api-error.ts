@@ -52,4 +52,8 @@ export class ApiError extends Error {
     static internal(message = "Internal server error") {
         return new ApiError(500, "INTERNAL", message);
     }
+
+    static pollNotFound(message = "Poll not found ") {
+        return new ApiError(404, "POLL_NOT_FOUND", message);
+    }
 }

@@ -3,6 +3,7 @@ import {pollTable, optionTable, questionTable} from "../../db/schema.js";
 import type {createPollInput} from "./poll.zod.validation.js";
 import {makeSlug} from "./poll.utils.js";
 import {ApiError} from "../../utils/api-error.js";
+import {eq} from "drizzle-orm";
 
 export async function createPoll(userId:string, input: createPollInput){
     const slug = makeSlug(input.title)
@@ -55,4 +56,18 @@ export async function createPoll(userId:string, input: createPollInput){
     })
 
     return result;
+}
+
+export async function getPollBySlug(slug:string){
+    const [poll] = await db.select().from(pollTable).where(eq(pollTable.slug, slug)).limit(1)
+    if (!poll) throw ApiError.pollNotFound();
+
+    const [question] = await db.select().from(questionTable).where(eq(questionTable.pollId, poll.id)).limit(1)
+    if(!question) throw ApiError.internal("Failed to get poll");
+
+    //no destructuring here, you want the whole array, ordered so options display in the order they were created.
+    const options = await db.select().from(optionTable).where(eq(optionTable.questionId, question.id)).orderBy(optionTable.displayOrder)
+
+    return {poll, question, options};
+
 }
