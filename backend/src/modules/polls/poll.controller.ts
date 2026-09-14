@@ -18,3 +18,9 @@ export async function getPoll(req: Request, res: Response) {
 
     return ApiResponse.ok(res, "Fetched poll successfully", {publicPoll, question, options});
 }
+
+export async function submitVote(req: Request, res: Response) {
+    const result = await pollService.submitVoteService(req.params.slug as string, req.voterId as string, req.body.optionIds);
+    return ApiResponse.created(res, "Vote submitted successfully", result)
+
+}

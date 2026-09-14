@@ -56,4 +56,16 @@ export class ApiError extends Error {
     static pollNotFound(message = "Poll not found ") {
         return new ApiError(404, "POLL_NOT_FOUND", message);
     }
+
+    static pollClosed(message = "Poll closed ") {
+        return new ApiError(400, "POLL_CLOSED", message);
+    }
+
+    static alreadyVoted(message = "Already voted") {
+        return new ApiError(409, "ALREADY_VOTED", message);
+    }
+
+    static optionNotFound(message = "Option not found") {
+        return new ApiError(400, "POLL_OPTION_NOT_FOUND", message);
+    }
 }

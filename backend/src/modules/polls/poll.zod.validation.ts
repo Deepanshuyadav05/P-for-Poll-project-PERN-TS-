@@ -37,3 +37,27 @@ export const createPollSchema = z.object({
 }).strict()
 
 export type createPollInput = z.infer<typeof createPollSchema>;
+
+export const submitVoteSchema = z.object({
+    //The scenario this protects against: say a question allows multiple choices, and a voter is supposed to pick from 3 options. Nothing on the client automatically stops a buggy (or malicious) request from sending the same option
+    //   ID more than once, like:
+    //   { "optionIds": ["opt-1", "opt-1", "opt-2"] }
+    //   If that gets through unchecked, your service will later insert one row into voteTable per array element — so opt-1 would get two vote rows from a single vote submission, while opt-2 gets one. That's ballot-stuffing a single
+    //   option, and it'd silently corrupt your tally counts. The duplicate check exists purely to reject a payload like that before it ever reaches the database.
+    //
+    //   What new Set(arr).size === arr.length actually does, step by step:
+    //   - arr is the array as submitted, e.g. ["opt-1", "opt-1", "opt-2"] → arr.length is 3.
+    //   - Set is a built-in JS collection type that automatically throws away duplicates — if you feed it values it's already seen, it just keeps one copy. new Set(["opt-1", "opt-1", "opt-2"]) becomes a set containing only {"opt-1",
+    //     "opt-2"}.
+    //   - .size is the Set's item count — 2 in this example.
+    //   - Compare: 2 === 3? False. That mismatch is exactly what tells you "something in the original array was repeated."
+    optionIds: z.array(z.uuid())
+        .min(1, "Select at least one option")
+        .max(10, "Too many options selected")
+        .refine(
+            (arr) => new Set(arr).size === arr.length,
+            "Duplicate option ids are not allowed"
+        )
+}).strict()
+
+export type submitVoteInput = z.infer<typeof submitVoteSchema>;

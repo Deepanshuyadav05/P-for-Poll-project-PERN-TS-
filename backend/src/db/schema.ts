@@ -55,6 +55,7 @@ export const responseTable = pgTable("responses", {
   id: uuid().primaryKey().defaultRandom(),
   pollId: uuid("poll_id").notNull().references(() => pollTable.id, { onDelete: "cascade" }),
   userId: uuid("user_id").references(() => userTable.id, { onDelete: "cascade" }),
+  //that a browser voted on this poll at all
   voterId: varchar("voter_id", { length: 36 }).notNull(),
   submittedAt: timestamp("submitted_at", { withTimezone: true }).defaultNow().notNull(),
 
@@ -69,6 +70,7 @@ export const responseTable = pgTable("responses", {
 // the database guarantees that a specific user can only submit one response to a specific poll.
 
 
+//store the option voter has selected
 export const voteTable = pgTable("votes", {
   id: uuid().primaryKey().defaultRandom(),
   optionId: uuid("option_id").notNull().references(() => optionTable.id, { onDelete: "cascade" }),
