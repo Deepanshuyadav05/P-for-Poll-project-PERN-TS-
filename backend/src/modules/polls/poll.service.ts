@@ -3,7 +3,7 @@ import {pollTable, optionTable, questionTable, responseTable, voteTable} from ".
 import type {createPollInput} from "./poll.zod.validation.js";
 import {makeSlug} from "./poll.utils.js";
 import {ApiError} from "../../utils/api-error.js";
-import {and, eq} from "drizzle-orm";
+import {and, count, eq} from "drizzle-orm";
 
 export async function createPoll(userId:string, input: createPollInput){
     const slug = makeSlug(input.title)
@@ -128,4 +128,35 @@ export async function submitVoteService(slug:string, voterId:string, optionIds:s
 
         return { responseId };
 
+}
+
+
+//helper function for getResultService
+async function computeResults(questionId: string) {
+    return await db
+        .select({
+            optionId: optionTable.id,
+            optionText: optionTable.optionText,
+            displayOrder: optionTable.displayOrder,
+            voteCount: count(voteTable.id),  //count total vote id
+        })
+        .from(optionTable)
+        .leftJoin(voteTable, eq(voteTable.optionId, optionTable.id))
+        .where(eq(optionTable.questionId, questionId))
+        .groupBy(optionTable.id, optionTable.optionText, optionTable.displayOrder)
+        .orderBy(optionTable.displayOrder);
+}
+
+export async function getResultsService(slug:string){
+    const [poll] = await db.select().from(pollTable).where(eq(pollTable.slug, slug)).limit(1)
+    if (!poll) throw ApiError.pollNotFound();
+
+    const [question] = await db.select().from(questionTable).where(eq(questionTable.pollId, poll.id)).limit(1)
+    if(!question) throw ApiError.internal("Failed to get poll");
+
+    const results = await computeResults(question.id);
+
+    const {userId, ...publicPoll} = poll
+
+    return {publicPoll, question, results}
 }

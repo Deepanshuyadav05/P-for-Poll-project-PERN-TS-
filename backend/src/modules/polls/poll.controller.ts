@@ -24,3 +24,8 @@ export async function submitVote(req: Request, res: Response) {
     return ApiResponse.created(res, "Vote submitted successfully", result)
 
 }
+
+export async function getResults(req: Request, res: Response) {
+    const result = await pollService.getResultsService(req.params.slug as string);
+    return ApiResponse.ok(res, "Results fetched successfully", result)
+}
