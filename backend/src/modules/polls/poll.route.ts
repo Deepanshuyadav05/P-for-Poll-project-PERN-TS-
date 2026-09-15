@@ -10,7 +10,7 @@ const route = Router();
 route.post("/createPoll", authenticate,validateBody(createPollSchema), createPoll);
 route.get("/:slug", getPoll);
 route.post("/:slug/vote", ensureVoterId, validateBody(submitVoteSchema), submitVote);
-route.post("/:slug/results", getResults);
+route.get("/:slug/results", getResults);
 
 
 export default route;
