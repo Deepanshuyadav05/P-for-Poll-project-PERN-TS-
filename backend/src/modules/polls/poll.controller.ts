@@ -38,3 +38,8 @@ export async function getMyPollList(req: Request, res: Response) {
     const result = await pollService.listMyPollsService(req.userId as string);
     return ApiResponse.ok(res, "Fetched poll list successfully", result)
 }
+
+export async function deletePoll(req: Request, res: Response) {
+    await pollService.deletePollService(req.userId, req.params.slug as string);
+    return ApiResponse.ok(res, "Poll deleted successfully", "")
+}

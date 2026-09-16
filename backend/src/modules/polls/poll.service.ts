@@ -164,3 +164,19 @@ export async function getResultsService(slug:string){
 export async function listMyPollsService(userId:string){
     return await db.select().from(pollTable).where(eq(pollTable.userId, userId)).orderBy(desc(pollTable.createdAt))
 }
+
+export async function deletePollService(userId:string, slug:string){
+    const [poll] = await db.select().from(pollTable).where(eq(pollTable.slug, slug)).limit(1)
+    if(!poll) throw ApiError.pollNotFound();
+
+    //Why check poll.userId !== userId at all, given the route will already require authenticate? authenticate only proves "you're logged in as someone" — it says nothing about which poll you're allowed to touch. Without this
+    //check, any logged-in user could delete anyone's poll just by knowing its slug — same class of bug as the req.body.userId issue you just fixed, just showing up differently here.
+    if(poll.userId !== userId) throw ApiError.forbidden("You do not own this poll");
+
+    // a DELETE statement is always shaped as "delete FROM <table>, WHERE <condition>"
+    await db.delete(pollTable).where(eq(pollTable.id, poll.id))
+
+    return
+
+
+}
