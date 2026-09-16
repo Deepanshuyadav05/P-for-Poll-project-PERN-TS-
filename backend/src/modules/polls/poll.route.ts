@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {validateBody} from "../../middlewares/validate.middleware.js";
-import {createPoll, getPoll, getResults, submitVote} from "./poll.controller.js";
+import {createPoll, getMyPollList, getPoll, getResults, submitVote} from "./poll.controller.js";
 import {createPollSchema, submitVoteSchema} from "./poll.zod.validation.js";
 import {authenticate} from "../auth/auth.middlewares.js";
 import {ensureVoterId} from "./poll.middleware.js";
@@ -8,9 +8,11 @@ import {ensureVoterId} from "./poll.middleware.js";
 const route = Router();
 
 route.post("/createPoll", authenticate,validateBody(createPollSchema), createPoll);
+route.get("/getMyPolls", authenticate, getMyPollList);
 route.get("/:slug", getPoll);
 route.post("/:slug/vote", ensureVoterId, validateBody(submitVoteSchema), submitVote);
 route.get("/:slug/results", getResults);
+
 
 
 export default route;

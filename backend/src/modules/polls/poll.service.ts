@@ -3,7 +3,7 @@ import {pollTable, optionTable, questionTable, responseTable, voteTable} from ".
 import type {createPollInput} from "./poll.zod.validation.js";
 import {makeSlug} from "./poll.utils.js";
 import {ApiError} from "../../utils/api-error.js";
-import {and, count, eq} from "drizzle-orm";
+import {and, count, desc, eq} from "drizzle-orm";
 
 export async function createPoll(userId:string, input: createPollInput){
     const slug = makeSlug(input.title)
@@ -159,4 +159,8 @@ export async function getResultsService(slug:string){
     const {userId, ...publicPoll} = poll
 
     return {publicPoll, question, results}
+}
+
+export async function listMyPollsService(userId:string){
+    return await db.select().from(pollTable).where(eq(pollTable.userId, userId)).orderBy(desc(pollTable.createdAt))
 }
