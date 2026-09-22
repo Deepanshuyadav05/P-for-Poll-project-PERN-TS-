@@ -24,3 +24,13 @@ export const signupSchema = z.object({
 
 export type SignupFormInputs = z.infer<typeof signupSchema>
 
+//Login schema
+export const loginSchema = z.object({
+    email: email,
+    password: password,
+});
+
+//extracts a TypeScript type from your Zod schema, so LoginFormInputs becomes an object type matching whatever fields loginSchema validates
+// (e.g. { email: string; password: string }).
+export type LoginFormInputs = z.infer<typeof loginSchema>
+
