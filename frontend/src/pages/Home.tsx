@@ -89,10 +89,20 @@ function Home() {
     }
 
     async function handleLogout(){
-        const logoutMsg = await api.post(`auth/logout`)
-        console.log(logoutMsg)
-        handleSuccessTostify(logoutMsg.data.message)
-        navigate('/login')
+        try {
+            const logoutMsg = await api.post(`auth/logout`)
+            console.log(logoutMsg)
+            handleSuccessTostify(logoutMsg.data.message)
+            navigate('/login')
+        }
+        catch(err){
+            console.error(err)
+            const message = axios.isAxiosError(err)
+                ? err.response?.data?.message ?? "Something went wrong"
+                : "Something went wrong"
+            handleErrorTostify(message)
+        }
+
     }
 
 
