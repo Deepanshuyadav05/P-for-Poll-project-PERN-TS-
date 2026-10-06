@@ -57,6 +57,7 @@ function PollVote() {
         fetchData(slug)
 
     }, [])
+    //early returns
     if (isLoading) return <div>⏳ Loading data, please wait...</div>
     if (!poll) return <div>Poll not found</div>
 
