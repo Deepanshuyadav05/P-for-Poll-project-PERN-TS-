@@ -8,8 +8,12 @@ export function ensureVoterId(req:Request, res:Response, next:NextFunction) {
     }
     else{
         const id = randomUUID()
+        //same cross-site settings as the accessToken cookie, otherwise the browser drops voterId and every vote looks like a new voter
+        const isDev = process.env.NODE_ENV === "development";
         res.cookie("voterId", id, {
             httpOnly: true,
+            secure: !isDev,
+            sameSite: isDev ? "lax" : "none",
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days,
 
         })

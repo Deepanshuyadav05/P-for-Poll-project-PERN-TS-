@@ -12,5 +12,3 @@ const main = async () => {
 main().catch((err) => {
     console.error("Error starting the server:", err);
 });
-
-console.log("Hello from server.ts");

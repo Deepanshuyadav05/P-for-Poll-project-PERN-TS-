@@ -43,9 +43,7 @@ export async function signupService(input: SignupInput): Promise<SafeUser> {
 
 //Login service
 export async function loginService(input: LoginInput): Promise<{ user: SafeUser; token: string} >  {
-    if(process.env.NODE_ENV === "development") {
-        console.log(input)
-    }
+
     const isPresent = await db.select().from(userTable).where(eq( userTable.email, input.email )).limit(1);
     if(isPresent.length == 0) {
         throw ApiError.unauthorized("Invalid credentials");
@@ -55,11 +53,11 @@ export async function loginService(input: LoginInput): Promise<{ user: SafeUser;
     //   variable named user.
     const [user] = isPresent
     // user is User | undefine
-    if (!user) throw ApiError.unauthorized("Invalid credentials 1");
+    if (!user) throw ApiError.unauthorized("Invalid credentials");
 
     const isPasswordValid = await bcrypt.compare(input.password, user.passwordHash);
     if(!isPasswordValid) {
-        throw ApiError.unauthorized("Invalid credentials 2");
+        throw ApiError.unauthorized("Invalid credentials");
     }
 
     const AccessToken = generateAccessToken({ sub: user.id })

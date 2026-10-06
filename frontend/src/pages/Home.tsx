@@ -38,8 +38,6 @@ function Home() {
                     api.get("polls/getMyPolls"),
                 ])
 
-                console.log(fetchUserData);
-                console.log(fetchPollData);
                 setUserName(fetchUserData.data.data.user.name);
                 setMyPolls(fetchPollData.data.data)
 
@@ -74,7 +72,6 @@ function Home() {
 
         try {
             const deleteMsg = await api.delete(`polls/deletePoll/${slug}`)
-            console.log(deleteMsg)
             // update myPolls state by filtering out that poll (no need to refetch the whole list)
             setMyPolls(prev => prev.filter(p => p.slug !== slug))
             handleSuccessTostify(deleteMsg.data.message)
@@ -91,7 +88,6 @@ function Home() {
     async function handleLogout(){
         try {
             const logoutMsg = await api.post(`auth/logout`)
-            console.log(logoutMsg)
             handleSuccessTostify(logoutMsg.data.message)
             navigate('/login')
         }
@@ -132,7 +128,7 @@ function Home() {
                                         Expires on : {poll.expiresAt}
 
                                         <Link to={`/poll/${poll.slug}/pollResult`}>View Result</Link>
-                                        <Link to={`/poll/${poll.slug}/pollVote`}>View Votes</Link>
+                                        <Link to={`/poll/${poll.slug}/pollVote`}>Votes</Link>
 
                                         <button onClick={() => {handleDelete(poll.slug)}} >Delete</button>
                                     </li>

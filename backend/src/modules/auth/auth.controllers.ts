@@ -4,10 +4,12 @@ import {ApiResponse} from "../../utils/api-response.js";
 import type {CookieOptions} from "express";
 
 //shared cookie options for the accessToken cookie, used by both login and access
+//frontend (Vercel) and backend (Render) are on different sites, so in production the cookie must be sameSite "none" (which requires secure) or the browser won't send it
+const isDev = process.env.NODE_ENV === "development";
 const accessCookieOptions : CookieOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: "strict",
+        secure: !isDev,
+        sameSite: isDev ? "lax" : "none",
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
 }
 //Signup controller

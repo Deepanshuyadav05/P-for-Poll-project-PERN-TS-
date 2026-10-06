@@ -9,7 +9,7 @@ import PollVote from '../pages/PollVote'
 
 
 
-let router = createBrowserRouter(
+const router = createBrowserRouter(
     createRoutesFromElements(
         <Route>
 

@@ -51,7 +51,7 @@ function PollResult() {
     if (!result) return <div>Poll result not found</div>
 
     //If poll is expired then we will sow poll expired else we will show poll is live
-    //by this we can get isExpired as string, or booleon but we want it sstrictly true of false to use in the button
+    //by this we can get isExpired as string, or boolean, but we want it strictly true of false to use in the button
     // const isExpired = result.publicPoll.expiresAt && new Date(result.publicPoll.expiresAt) < new Date()
     const isExpired = result.publicPoll.expiresAt !== null && new Date(result.publicPoll.expiresAt) < new Date()
 

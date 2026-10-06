@@ -44,7 +44,6 @@ function CreatePoll() {
         }
         try {
             const res = await api.post(`polls/createPoll`, payload)
-            console.log(res)
             const slug = res.data.data.poll.slug
             // The slug just isn't a link by itself, so you'd build the full URL.
             // window.location.origin is the site's own address (http://localhost:5173 in dev), so the link keeps working after you deploy
