@@ -66,7 +66,7 @@ function Home() {
 
     },[])
 
-    if (isLoading) return <div>⏳ Loading data, please wait...</div>
+    if (isLoading) return <div className="p-6">⏳ Loading data, please wait...</div>
 
     async function handleDelete(slug: string) {
 
@@ -104,33 +104,33 @@ function Home() {
 
 
     return (
-        <div>
-            <nav>
-                <h1>Welcome {userName}</h1>
-                <button onClick={() => {handleLogout()}}>Logout</button>
+        <div className="mx-auto max-w-xl space-y-4 p-6">
+            <nav className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold">Welcome {userName}</h1>
+                <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50" onClick={() => {handleLogout()}}>Logout</button>
             </nav>
-            <main>
+            <main className="space-y-4">
                 <Link to={'/poll/createPoll'}>
-                    <button>Create Poll</button>
+                    <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50">Create Poll</button>
                 </Link>
 
-                <div>
-                    <h3>My Polls</h3>
+                <div className="space-y-3">
+                    <h3 className="text-lg font-semibold">My Polls</h3>
                     {myPolls.length === 0 && <p>You haven't created any polls yet.</p>}
-                    <ul>
+                    <ul className="space-y-3">
                             {
                                 myPolls.map((poll) => (
-                                    <li key={poll.id}>
-                                        Title : {poll.title}
-                                        Description : {poll.description}
-                                        Poll type : {poll.isPublic ? "Public" : "Private"}
-                                        Created at : {poll.createdAt}
-                                        Expires on : {poll.expiresAt}
+                                    <li key={poll.id} className="rounded border border-neutral-700 space-y-1 p-4">
+                                        <p className="font-semibold">Title : {poll.title}</p>
+                                        <p className="text-sm text-neutral-400">Description : {poll.description}</p>
+                                        <p className="text-sm text-neutral-400">Poll type : {poll.isPublic ? "Public" : "Private"}</p>
+                                        <p className="text-sm text-neutral-400">Created at : {poll.createdAt}</p>
+                                        <p className="text-sm text-neutral-400">Expires on : {poll.expiresAt}</p>
 
-                                        <Link to={`/poll/${poll.slug}/pollResult`}>View Result</Link>
-                                        <Link to={`/poll/${poll.slug}/pollVote`}>Votes</Link>
+                                        <Link className="mr-4 text-blue-400 underline" to={`/poll/${poll.slug}/pollResult`}>View Result</Link>
+                                        <Link className="mr-4 text-blue-400 underline" to={`/poll/${poll.slug}/pollVote`}>Votes</Link>
 
-                                        <button onClick={() => {handleDelete(poll.slug)}} >Delete</button>
+                                        <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50" onClick={() => {handleDelete(poll.slug)}} >Delete</button>
                                     </li>
                                   )
                                 )

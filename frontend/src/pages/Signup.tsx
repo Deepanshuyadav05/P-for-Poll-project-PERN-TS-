@@ -44,53 +44,53 @@ function Signup() {
 
 
     return (
-        <div>
-            <h1>Signup</h1>
-            <form onSubmit={handleSubmit(onSubmitHandler)}>
+        <div className="mx-auto max-w-xl space-y-4 p-6">
+            <h1 className="text-2xl font-bold">Signup</h1>
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmitHandler)}>
                 <div>
-                    <label htmlFor="name">Name</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="name">Name</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         type="text"
                         id="name"
                         autoFocus
                         placeholder="Enter your name"
                         {...register("name")}
                     />
-                    {errors.name && <p>{errors.name.message}</p>}
+                    {errors.name && <p className="text-sm text-red-400">{errors.name.message}</p>}
                 </div>
 
                 <div>
-                    <label htmlFor="email">Email</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="email">Email</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         type="email"
                         id="email"
                         placeholder="Enter your email"
                         {...register("email")}
                     />
-                    {errors.email && <p>{errors.email.message}</p>}
+                    {errors.email && <p className="text-sm text-red-400">{errors.email.message}</p>}
                 </div>
 
 
                 <div>
-                    <label htmlFor="password">Password</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="password">Password</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         type="password"
                         id="password"
                         placeholder="Enter your password"
                         {...register("password")}
                     />
-                    {errors.password && <p>{errors.password.message}</p>}
+                    {errors.password && <p className="text-sm text-red-400">{errors.password.message}</p>}
                 </div>
 
-                <button
+                <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                     type="submit"
                     disabled={isSubmitting}
                 >{isSubmitting ? "Submitting" : "Submit"}
                 </button>
 
-                <span>
+                <span className="block text-sm">
                     Already have an account?
-                    <Link to="/login">Login</Link>
+                    <Link className="ml-1 text-blue-400 underline" to="/login">Login</Link>
                 </span>
             </form>
         </div>

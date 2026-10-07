@@ -58,15 +58,15 @@ function PollVote() {
 
     }, [])
     //early returns
-    if (isLoading) return <div>⏳ Loading data, please wait...</div>
-    if (!poll) return <div>Poll not found</div>
+    if (isLoading) return <div className="p-6">⏳ Loading data, please wait...</div>
+    if (!poll) return <div className="p-6">Poll not found</div>
 
     //If poll is expired then we will redirect the user to the result page
     const isExpired = poll.publicPoll.expiresAt && new Date(poll.publicPoll.expiresAt) < new Date()
     if (isExpired) return (
-        <div>
+        <div className="mx-auto max-w-xl space-y-4 p-6">
             <p>This poll is closed.</p>
-            <Link to={`/poll/${slug}/pollResult`}>View results</Link>
+            <Link className="text-blue-400 underline" to={`/poll/${slug}/pollResult`}>View results</Link>
         </div>
     )
 
@@ -101,14 +101,14 @@ function PollVote() {
     }
 
     return (
-        <div>
-            <h1>Poll Title : {poll.publicPoll.title}</h1>
-            <p>Description : {poll.publicPoll.description}</p>
-            <h3>Question : {poll.question.questionText}</h3>
-            <div>
+        <div className="mx-auto max-w-xl space-y-4 p-6">
+            <h1 className="text-2xl font-bold">Poll Title : {poll.publicPoll.title}</h1>
+            <p className="text-neutral-400">Description : {poll.publicPoll.description}</p>
+            <h3 className="text-lg font-semibold">Question : {poll.question.questionText}</h3>
+            <div className="space-y-2">
                 {
                     poll.options.map((option) => (
-                        <label key={option.id}>
+                        <label key={option.id} className="flex cursor-pointer items-center gap-2 rounded border border-neutral-700 px-3 py-2">
                             <input
                                 name="option"
                                 type="radio"
@@ -126,7 +126,7 @@ function PollVote() {
                     ))
                 }
             </div>
-            <button
+            <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                 // It's disabled until the user picks an option, and while a request is in flight, so a double-click can't send two votes
                 disabled={isSubmitting || !selectedOptionId}
                 onClick={()=>{handleVoting()}}

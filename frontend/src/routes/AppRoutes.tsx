@@ -32,7 +32,7 @@ const router = createBrowserRouter(
 
             {/*catch-all route*/}
             {/*Add this as the last route, so a mistyped URL shows your message instead of React Router's error screen:*/}
-            <Route path='*' element={<div>Page not found</div>} />
+            <Route path='*' element={<div className="p-6">Page not found</div>} />
 
 
 

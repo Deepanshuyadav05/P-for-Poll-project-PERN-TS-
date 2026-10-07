@@ -62,11 +62,11 @@ function CreatePoll() {
 
     if (pollLink) {
         return (
-            <div>
-                <h1>Poll created!</h1>
+            <div className="mx-auto max-w-xl space-y-4 p-6">
+                <h1 className="text-2xl font-bold">Poll created!</h1>
                 <p>Share this link:</p>
-                <input type="text" readOnly value={pollLink} />
-                <button
+                <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2" type="text" readOnly value={pollLink} />
+                <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                     onClick={async () => {
                         try {
                             await navigator.clipboard.writeText(pollLink)
@@ -82,89 +82,89 @@ function CreatePoll() {
 
                     }}
                 >Copy</button>
-                <Link to="/home">Back to Home</Link>
+                <Link className="text-blue-400 underline" to="/home">Back to Home</Link>
             </div>
         )
     }
 
     return (
-        <div>
-            <Link to={'/home'}>Home</Link>
+        <div className="mx-auto max-w-xl space-y-4 p-6">
+            <Link className="text-blue-400 underline" to={'/home'}>Home</Link>
 
-            <h1>CreatePoll</h1>
-            <form onSubmit={handleSubmit(onSubmitHandler)}>
+            <h1 className="text-2xl font-bold">CreatePoll</h1>
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmitHandler)}>
                 {/*Title*/}
                 <div>
-                    <label htmlFor="title">Title</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="title">Title</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         type="text"
                         id="title"
                         required
                         {...register("title")}
                     />
-                    {errors.title && <p>{errors.title.message}</p>}
+                    {errors.title && <p className="text-sm text-red-400">{errors.title.message}</p>}
                 </div>
 
                 {/*Description*/}
                 <div>
-                    <label htmlFor="description">Description</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="description">Description</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         type="text"
                         id="description"
                         {...register("description")}
                     />
-                    {errors.description && <p>{errors.description.message}</p>}
+                    {errors.description && <p className="text-sm text-red-400">{errors.description.message}</p>}
                 </div>
 
                 {/*Question input*/}
                 <div>
-                    <label htmlFor="question">Question</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="question">Question</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         type="text"
                         id="question"
                         required
                         // because question is an object.
                         {...register("question.questionText")}
                     />
-                    {errors.question?.questionText && <p>{errors.question.questionText.message}</p>}
+                    {errors.question?.questionText && <p className="text-sm text-red-400">{errors.question.questionText.message}</p>}
                 </div>
 
                 {/*Options input*/}
                 {fields.map((field, index) => (
-                    <div key={field.id}>
-                        <input
+                    <div key={field.id} className="flex flex-wrap gap-2">
+                        <input className="min-w-0 flex-1 rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                             type="text"
                             placeholder={`Option ${index + 1}`}
                             {...register(`question.options.${index}.value`)}
                         />
                         {fields.length > 2 && (
-                            <button type="button" onClick={() => remove(index)}>Remove</button>
+                            <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50" type="button" onClick={() => remove(index)}>Remove</button>
                         )}
                         {errors.question?.options?.[index]?.value && (
-                            <p>{errors.question.options[index].value.message}</p>
+                            <p className="w-full text-sm text-red-400">{errors.question.options[index].value.message}</p>
                         )}
                     </div>
                 ))}
 
                 {/*// "Add option" button and the list-level error*/}
                 {fields.length < 10 && (
-                    <button type="button" onClick={() => append({value: ""})}>Add option</button>
+                    <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50" type="button" onClick={() => append({value: ""})}>Add option</button>
                 )}
-                {errors.question?.options?.root && <p>{errors.question.options.root.message}</p>}
+                {errors.question?.options?.root && <p className="text-sm text-red-400">{errors.question.options.root.message}</p>}
 
                 {/*//Expire Date*/}
                 <div>
-                    <label htmlFor="expiresAt">Expires at (optional)</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="expiresAt">Expires at (optional)</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         // It gives you a plain string like "2026-10-05T15:30", or "" if the user leaves it untouched. That string is in the user's local time and carries no timezone information.
                         type="datetime-local"
                         id="expiresAt"
                         {...register("expiresAt")}
                     />
-                    {errors.expiresAt && <p>{errors.expiresAt.message}</p>}
+                    {errors.expiresAt && <p className="text-sm text-red-400">{errors.expiresAt.message}</p>}
                 </div>
 
-                <button
+                <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                     type="submit"
                     disabled={isSubmitting}
                 >{isSubmitting ? "Submitting" : "Submit"}

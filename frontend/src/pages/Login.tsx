@@ -39,42 +39,42 @@ function Login() {
     }
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit(onSubmitHandler)}>
+        <div className="mx-auto max-w-xl space-y-4 p-6">
+            <h1 className="text-2xl font-bold">Login</h1>
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmitHandler)}>
 
                 <div>
-                    <label htmlFor="email">Email</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="email">Email</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         type="email"
                         id="email"
                         placeholder="Enter your email"
                         {...register("email")}
                     />
-                    {errors.email && <p>{errors.email.message}</p>}
+                    {errors.email && <p className="text-sm text-red-400">{errors.email.message}</p>}
                 </div>
 
 
                 <div>
-                    <label htmlFor="password">Password</label>
-                    <input
+                    <label className="mb-1 block text-sm" htmlFor="password">Password</label>
+                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
                         type="password"
                         id="password"
                         placeholder="Enter your password"
                         {...register("password")}
                     />
-                    {errors.password && <p>{errors.password.message}</p>}
+                    {errors.password && <p className="text-sm text-red-400">{errors.password.message}</p>}
                 </div>
 
-                <button
+                <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
                     type="submit"
                     disabled={isSubmitting}
                 >{isSubmitting ? "Submitting" : "Submit"}
                 </button>
 
-                <span>
+                <span className="block text-sm">
                     Don't have an account?
-                    <Link to="/signup">Signup</Link>
+                    <Link className="ml-1 text-blue-400 underline" to="/signup">Signup</Link>
                 </span>
             </form>
         </div>
