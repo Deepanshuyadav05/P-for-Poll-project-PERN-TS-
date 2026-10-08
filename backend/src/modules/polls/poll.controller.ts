@@ -26,8 +26,12 @@ export async function submitVote(req: Request, res: Response) {
     const slug = req.params.slug as string;
     const result = await pollService.submitVoteService(slug, req.voterId as string, req.body.optionIds);
 
-    const {results} = await pollService.getResultsService(slug)
-    getIO().to(`poll:${slug}`).emit("poll:results", results);  //it is same as io.to but here we simply return io from getIO function
+    try {
+        const {results} = await pollService.getResultsService(slug)
+        getIO().to(`poll:${slug}`).emit("poll:results", results)  //it is same as io.to but here we simply return io from getIO function
+    } catch (err) {
+        console.error("Failed to broadcast results:", err)
+    }
 
     return ApiResponse.created(res, "Vote submitted successfully", result)
 

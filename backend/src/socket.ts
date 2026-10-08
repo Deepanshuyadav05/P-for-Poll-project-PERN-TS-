@@ -13,7 +13,6 @@ export function initSocket(httpServer: HttpServer){
 
     //Register connection hanler
     io.on("connection", socket => {
-        console.log("Socket connected", socket.id);
 
         //socket.on(eventName, callback): listen for a message
         //      It takes two arguments:
