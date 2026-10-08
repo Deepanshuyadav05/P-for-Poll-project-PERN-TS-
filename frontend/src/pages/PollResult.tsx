@@ -3,6 +3,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {api} from "../api/client.ts";
 import axios from "axios";
 import {handleErrorTostify} from "../utils/tostify.error.msg.ts";
+import {socket} from "../api/socket.ts";
 
 function PollResult() {
     const navigate = useNavigate();
@@ -46,6 +47,42 @@ function PollResult() {
 
 
     },[])
+
+    //Web-Sockets
+    useEffect(() => {
+        if (!slug) return
+        // Define two handler functions. They need names so you can remove them later.
+
+        socket.on("connect", handleConnect)
+        socket.on("poll:results", handleResults)
+
+        socket.connect()
+
+        return () => {
+            socket.off("connect", handleConnect)
+            socket.off("poll:results", handleResults)
+            socket.emit("poll:leave", slug)
+            socket.disconnect()
+        }
+
+        //handler function of sockets
+        function handleConnect(){
+            // emits the join request, socket.emit("poll:join", slug). This is the message your backend's socket.on("poll:join") is waiting for.
+            socket.emit("poll:join", slug)
+        }
+
+        function handleResults(newResults: ResultData["results"]){
+            // receives the new counts and updates state. Its parameter is the results array the controller emitted, typed as ResultData["results"]:
+            setResult(prev => prev ? { ...prev, results: newResults } : prev)
+            // - newResults is the array the controller sent with .emit("poll:results", results). Whatever the server attaches to an emit arrives as the listener's argument.
+            // - setResult(prev => ...) is the function form of the setter. React passes in the current state as prev, and you return the new state.
+            // - { ...prev, results: newResults } copies everything from the old state (publicPoll, question) and replaces only results with the fresh counts.
+            // - prev ? ... : prev covers prev being null, which happens if a socket message arrives before the first fetch finishes. In that case it leaves the state alone.
+        }
+    }, [slug])
+
+
+
     //early return
     if (isLoading) return <div className="p-6">⏳ Loading data, please wait...</div>
     if (!result) return <div className="p-6">Poll result not found</div>
