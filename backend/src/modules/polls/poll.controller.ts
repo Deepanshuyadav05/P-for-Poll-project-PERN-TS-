@@ -2,6 +2,7 @@ import {createPollSchema} from "./poll.zod.validation.js";
 import * as pollService from "./poll.service.js";
 import type {Response, Request} from "express";
 import {ApiResponse} from "../../utils/api-response.js";
+import {getIO} from "../../socket.js";
 
 export async function createPoll(req: Request, res: Response) {
 
@@ -22,7 +23,12 @@ export async function getPoll(req: Request, res: Response) {
 }
 
 export async function submitVote(req: Request, res: Response) {
-    const result = await pollService.submitVoteService(req.params.slug as string, req.voterId as string, req.body.optionIds);
+    const slug = req.params.slug as string;
+    const result = await pollService.submitVoteService(slug, req.voterId as string, req.body.optionIds);
+
+    const {results} = await pollService.getResultsService(slug)
+    getIO().to(`poll:${slug}`).emit("poll:results", results);  //it is same as io.to but here we simply return io from getIO function
+
     return ApiResponse.created(res, "Vote submitted successfully", result)
 
 }
