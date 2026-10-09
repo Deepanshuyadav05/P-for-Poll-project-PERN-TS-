@@ -105,6 +105,20 @@ body {
   animation: live-ping 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
+/* Result bars (PollResult). The bar's length comes from the --w variable set inline on each bar.
+   - transition: whenever --w changes (a new vote arrives over the socket) the bar glides to its new length.
+   - @starting-style: the value a bar has at the very moment it first appears, so on page load it grows from 0. */
+.vote-bar {
+  width: var(--w);
+  transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@starting-style {
+  .vote-bar {
+    width: 0;
+  }
+}
+
 /* Browser-drawn parts, themed to match */
 ::selection {
   background: var(--color-fog);
@@ -116,6 +130,10 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .vote-bar {
+    transition: none !important;
+  }
+
   .live-ping {
     animation: none !important;
     opacity: 0;
