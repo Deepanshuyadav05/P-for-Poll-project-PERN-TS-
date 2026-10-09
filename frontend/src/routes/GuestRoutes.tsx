@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {api} from "../api/client.ts";
 import {Navigate, Outlet} from "react-router-dom";
+import AppLoading from "../components/AppLoading.tsx";
 
 function GuestRoutes() {
 
@@ -23,7 +24,7 @@ function GuestRoutes() {
     },[])
 
     //<Outlet /> means "render whichever child route matched here". That's what lets one guard wrap several pages
-    if (status === "Loading") return <div>⏳ Loading...</div>
+    if (status === "Loading") return <AppLoading />
     if (status === "Guest") return <Outlet />
     return <Navigate to="/home" replace />
 }

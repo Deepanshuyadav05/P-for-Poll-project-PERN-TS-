@@ -119,6 +119,16 @@ body {
   }
 }
 
+/* AppLoading: the tally mark slowly fades and swells, so the page reads as "working", not "stuck". */
+@keyframes tally-breathe {
+  0%, 100% { opacity: 0.5; transform: scale(0.96); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+.tally-breathe {
+  animation: tally-breathe 1.8s ease-in-out infinite;
+}
+
 /* Browser-drawn parts, themed to match */
 ::selection {
   background: var(--color-fog);
@@ -130,6 +140,10 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .tally-breathe {
+    animation: none !important;
+  }
+
   .vote-bar {
     transition: none !important;
   }

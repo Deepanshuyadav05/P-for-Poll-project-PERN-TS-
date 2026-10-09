@@ -16,6 +16,7 @@ import {handleErrorTostify} from "../utils/tostify.error.msg.ts";
 import {handleSuccessTostify} from "../utils/tostify.success.msg.ts";
 import {TallyGroup} from "../components/TallyMarks.tsx";
 import {ArrowIcon} from "../components/Icons.tsx";
+import AppLoading from "../components/AppLoading.tsx";
 
 function PollVote() {
 
@@ -83,7 +84,7 @@ function PollVote() {
     const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mark/70 focus-visible:ring-offset-2 focus-visible:ring-offset-void"
 
     //early returns
-    if (isLoading) return <div className="flex min-h-dvh items-center justify-center text-body text-ash">Loading the ballot…</div>
+    if (isLoading) return <AppLoading label="Loading the ballot…" />
     if (!poll) return (
         <div className={page}>
             {pageTop}

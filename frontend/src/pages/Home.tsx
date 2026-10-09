@@ -18,6 +18,7 @@ import {handleSuccessTostify} from "../utils/tostify.success.msg.ts";
 import {Link, useNavigate} from "react-router-dom";
 import TallyMarks, {TallyGroup} from "../components/TallyMarks.tsx";
 import {ArrowIcon, LinkIcon, PlusIcon, TrashIcon} from "../components/Icons.tsx";
+import AppLoading from "../components/AppLoading.tsx";
 
 const MINUTE = 60 * 1000
 const HOUR = 60 * MINUTE
@@ -112,7 +113,7 @@ function Home() {
 
     },[])
 
-    if (isLoading) return <div className="flex min-h-dvh items-center justify-center text-body text-ash">Loading your polls…</div>
+    if (isLoading) return <AppLoading label="Loading your polls…" />
 
     async function handleDelete(slug: string) {
 

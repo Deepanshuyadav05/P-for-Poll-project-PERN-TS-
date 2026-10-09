@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {api} from "../api/client.ts";
 import {Navigate, Outlet} from "react-router-dom";
+import AppLoading from "../components/AppLoading.tsx";
 
 function ProtectedRoutes() {
 
@@ -22,7 +23,7 @@ function ProtectedRoutes() {
     },[])
 
     //<Outlet /> means "render whichever child route matched here". That's what lets one guard wrap several pages
-    if (status === "Loading") return <div>⏳ Loading...</div>
+    if (status === "Loading") return <AppLoading />
     // replace on <Navigate> stops the protected URL going into history, so the back button doesn't bounce the user straight back into the redirect.
     if (status === "Guest") return <Navigate to="/login" replace />
     return <Outlet />

@@ -6,6 +6,7 @@ import Home from '../pages/Home'
 import CreatePoll from '../pages/CreatePoll.tsx'
 import PollResult from '../pages/PollResult'
 import PollVote from '../pages/PollVote'
+import NotFound from '../pages/NotFound'
 import ProtectedRoutes from "./ProtectedRoutes.tsx";
 import GuestRoutes from "./GuestRoutes.tsx";
 
@@ -32,7 +33,7 @@ const router = createBrowserRouter(
 
             {/*catch-all route*/}
             {/*Add this as the last route, so a mistyped URL shows your message instead of React Router's error screen:*/}
-            <Route path='*' element={<div>Page not found</div>} />
+            <Route path='*' element={<NotFound />} />
 
 
 

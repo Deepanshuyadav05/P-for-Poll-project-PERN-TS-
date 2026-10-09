@@ -16,6 +16,7 @@ import {handleErrorTostify} from "../utils/tostify.error.msg.ts";
 import {socket} from "../api/socket.ts";
 import TallyMarks, {TallyGroup} from "../components/TallyMarks.tsx";
 import {ArrowIcon} from "../components/Icons.tsx";
+import AppLoading from "../components/AppLoading.tsx";
 
 function PollResult() {
     const navigate = useNavigate();
@@ -117,7 +118,7 @@ function PollResult() {
     )
 
     //early return
-    if (isLoading) return <div className="flex min-h-dvh items-center justify-center text-body text-ash">Counting the votes…</div>
+    if (isLoading) return <AppLoading label="Counting the votes…" />
     if (!result) return (
         <div className={page}>
             {pageTop}
