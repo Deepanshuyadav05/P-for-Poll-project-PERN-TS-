@@ -23,7 +23,7 @@ function GuestRoutes() {
     },[])
 
     //<Outlet /> means "render whichever child route matched here". That's what lets one guard wrap several pages
-    if (status === "Loading") return <div className="p-6">⏳ Loading...</div>
+    if (status === "Loading") return <div>⏳ Loading...</div>
     if (status === "Guest") return <Outlet />
     return <Navigate to="/home" replace />
 }

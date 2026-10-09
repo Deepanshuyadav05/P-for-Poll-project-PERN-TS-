@@ -6,6 +6,7 @@ import {api} from "../api/client.ts";
 import {handleSuccessTostify} from "../utils/tostify.success.msg.ts";
 import axios from "axios";
 import {handleErrorTostify} from "../utils/tostify.error.msg.ts";
+import FieldError from "../components/FieldError.tsx";
 
 
 function Login() {
@@ -38,45 +39,62 @@ function Login() {
 
     }
 
+    const fieldBase = "w-full rounded-field border border-hairline bg-glass px-4 py-[13px] font-body text-body text-fog placeholder:text-ash outline-none transition-colors duration-150 focus:border-fog/40 focus:bg-glass-strong aria-invalid:border-fog"
+    const labelBase = "mb-2 block text-label font-semibold uppercase tracking-[0.08em] transition-colors duration-150"
+    const labelClass = (hasError: boolean) => `${labelBase} ${hasError ? "text-fog" : "text-ash"}`
+
     return (
-        <div className="mx-auto max-w-xl space-y-4 p-6">
-            <h1 className="text-2xl font-bold">Login</h1>
-            <form className="space-y-4" onSubmit={handleSubmit(onSubmitHandler)}>
+        <div className="flex min-h-dvh items-center justify-center px-4 py-10">
+            <div className="card-enter w-full max-w-110 rounded-card border border-hairline bg-glass px-6 py-9 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.6)] sm:px-10 sm:py-10">
 
-                <div>
-                    <label className="mb-1 block text-sm" htmlFor="email">Email</label>
-                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
-                        type="email"
-                        id="email"
-                        placeholder="Enter your email"
-                        {...register("email")}
-                    />
-                    {errors.email && <p className="text-sm text-red-400">{errors.email.message}</p>}
+                <div className="mb-8">
+                    <p className="text-label font-semibold uppercase tracking-[0.08em] text-ash">P for Poll</p>
+                    <h1 className="mt-4 font-display text-[clamp(1.75rem,4vw,2.25rem)] font-medium leading-[1.1] tracking-[-0.01em] text-fog">Login</h1>
+                    <p className="mt-2 text-body text-ash">Welcome back. Enter your details to continue.</p>
                 </div>
 
+                {/* noValidate turns off the browser's own validation popups, so the zod errors below are the only ones shown */}
+                <form onSubmit={handleSubmit(onSubmitHandler)} noValidate>
 
-                <div>
-                    <label className="mb-1 block text-sm" htmlFor="password">Password</label>
-                    <input className="w-full rounded border border-neutral-700 bg-neutral-800 px-3 py-2"
-                        type="password"
-                        id="password"
-                        placeholder="Enter your password"
-                        {...register("password")}
-                    />
-                    {errors.password && <p className="text-sm text-red-400">{errors.password.message}</p>}
-                </div>
+                    <div>
+                        <label className={labelClass(!!errors.email)} htmlFor="email">Email</label>
+                        <input className={fieldBase}
+                            type="email"
+                            id="email"
+                            autoComplete="email"
+                            placeholder="Enter your email"
+                            aria-invalid={errors.email ? "true" : "false"}
+                            {...register("email")}
+                        />
+                        <FieldError message={errors.email?.message} />
+                    </div>
 
-                <button className="rounded bg-blue-600 px-4 py-2 hover:bg-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
-                    type="submit"
-                    disabled={isSubmitting}
-                >{isSubmitting ? "Submitting" : "Submit"}
-                </button>
 
-                <span className="block text-sm">
-                    Don't have an account?
-                    <Link className="ml-1 text-blue-400 underline" to="/signup">Signup</Link>
-                </span>
-            </form>
+                    <div className="mt-4">
+                        <label className={labelClass(!!errors.password)} htmlFor="password">Password</label>
+                        <input className={fieldBase}
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            placeholder="Enter your password"
+                            aria-invalid={errors.password ? "true" : "false"}
+                            {...register("password")}
+                        />
+                        <FieldError message={errors.password?.message} />
+                    </div>
+
+                    <button className="mt-7 w-full rounded-button bg-fog py-3.5 text-small font-semibold uppercase tracking-[0.08em] text-void transition-colors duration-150 hover:bg-ash focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fog/40 focus-visible:ring-offset-2 focus-visible:ring-offset-void disabled:cursor-not-allowed disabled:bg-glass-strong disabled:text-smoke"
+                        type="submit"
+                        disabled={isSubmitting}
+                    >{isSubmitting ? "Logging in…" : "Login"}
+                    </button>
+
+                    <p className="mt-6 text-center text-small text-ash">
+                        Don't have an account?{' '}
+                        <Link className="font-medium text-fog transition-opacity hover:opacity-80" to="/signup">Signup</Link>
+                    </p>
+                </form>
+            </div>
         </div>
     )
 }

@@ -22,7 +22,7 @@ function ProtectedRoutes() {
     },[])
 
     //<Outlet /> means "render whichever child route matched here". That's what lets one guard wrap several pages
-    if (status === "Loading") return <div className="p-6">⏳ Loading...</div>
+    if (status === "Loading") return <div>⏳ Loading...</div>
     // replace on <Navigate> stops the protected URL going into history, so the back button doesn't bounce the user straight back into the redirect.
     if (status === "Guest") return <Navigate to="/login" replace />
     return <Outlet />
