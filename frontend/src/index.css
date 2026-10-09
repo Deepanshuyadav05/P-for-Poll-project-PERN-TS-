@@ -11,6 +11,8 @@
   --color-hairline: rgba(245, 245, 242, 0.14);
   --color-glass: rgba(245, 245, 242, 0.06);
   --color-glass-strong: rgba(245, 245, 242, 0.10);
+  /* The one accent: the mark you make on a ballot. App pages only — Login and Signup stay monochrome. */
+  --color-mark: #f2b233;
 
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -67,8 +69,63 @@ body {
   animation: card-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Tally strokes (TallyMarks) draw themselves in one after another on load.
+   Each <line> has pathLength="1", so a dash of 1 is exactly the whole stroke. */
+@keyframes tally-draw {
+  from { stroke-dashoffset: 1; opacity: 0; }
+  to { stroke-dashoffset: 0; opacity: 1; }
+}
+
+.tally-stroke {
+  stroke-dasharray: 1;
+  animation: tally-draw 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Home: a faint dotted grid behind the page, like the paper of a count sheet. It fades out towards the bottom. */
+.sheet-grid {
+  background-image: radial-gradient(rgba(245, 245, 242, 0.13) 1px, transparent 1.5px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 85%);
+}
+
+/* The same dots in dark ink, laid over the marigold header panel and fading in from the right. */
+.ink-dots {
+  background-image: radial-gradient(rgba(5, 5, 10, 0.22) 1.2px, transparent 1.7px);
+  background-size: 14px 14px;
+  mask-image: linear-gradient(100deg, transparent 30%, #000 100%);
+}
+
+/* The dot on a live poll: a ring that keeps expanding and fading. */
+@keyframes live-ping {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(2.8); opacity: 0; }
+}
+
+.live-ping {
+  animation: live-ping 1.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Browser-drawn parts, themed to match */
+::selection {
+  background: var(--color-fog);
+  color: var(--color-void);
+}
+
+html {
+  scrollbar-color: var(--color-smoke) var(--color-void);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .live-ping {
+    animation: none !important;
+    opacity: 0;
+  }
+
   .card-enter {
+    animation: none !important;
+  }
+
+  .tally-stroke {
     animation: none !important;
   }
 }

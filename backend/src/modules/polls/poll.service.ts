@@ -3,7 +3,7 @@ import {pollTable, optionTable, questionTable, responseTable, voteTable} from ".
 import type {createPollInput} from "./poll.zod.validation.js";
 import {makeSlug} from "./poll.utils.js";
 import {ApiError} from "../../utils/api-error.js";
-import {and, count, desc, eq} from "drizzle-orm";
+import {and, count, desc, eq, getTableColumns} from "drizzle-orm";
 
 export async function createPoll(userId:string, input: createPollInput){
     const slug = makeSlug(input.title)
@@ -162,7 +162,18 @@ export async function getResultsService(slug:string){
 }
 
 export async function listMyPollsService(userId:string){
-    return await db.select().from(pollTable).where(eq(pollTable.userId, userId)).orderBy(desc(pollTable.createdAt))
+    // responseCount = how many people have voted on each poll (one response row per voter).
+    // leftJoin (not innerJoin) keeps polls that have zero responses — they come back with a count of 0.
+    return await db
+        .select({
+            ...getTableColumns(pollTable),
+            responseCount: count(responseTable.id),
+        })
+        .from(pollTable)
+        .leftJoin(responseTable, eq(responseTable.pollId, pollTable.id))
+        .where(eq(pollTable.userId, userId))
+        .groupBy(pollTable.id)
+        .orderBy(desc(pollTable.createdAt))
 }
 
 export async function deletePollService(userId:string, slug:string){
